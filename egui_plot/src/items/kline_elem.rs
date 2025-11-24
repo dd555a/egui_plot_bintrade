@@ -156,9 +156,17 @@ impl KlinePlotPoint{
             (self.stroke, self.fill)
         };
 
+        let (a,b)=if &self.spread.o>=&self.spread.c{
+            (&self.point_at(self.argument - self.box_width / 2.0, self.spread.c),
+            &self.point_at(self.argument + self.box_width / 2.0, self.spread.o),)
+        }else{
+            (&self.point_at(self.argument - self.box_width / 2.0, self.spread.o),
+            &self.point_at(self.argument + self.box_width / 2.0, self.spread.c),)
+        };
+
         let rect = transform.rect_from_values(
-            &self.point_at(self.argument - self.box_width / 2.0, self.spread.o),
-            &self.point_at(self.argument + self.box_width / 2.0, self.spread.c),
+            a,
+            b,
         );
         let rect = Shape::Rect(RectShape::new(
             rect,
@@ -169,6 +177,7 @@ impl KlinePlotPoint{
         ));
         shapes.push(rect);
 
+        /*
         let line_between = |v1, v2| {
             Shape::line_segment(
                 [
@@ -178,6 +187,7 @@ impl KlinePlotPoint{
                 stroke,
             )
         };
+         *
         let v = line_between(
             self.point_at(self.argument - self.box_width / 2.0, self.spread.v),
             self.point_at(self.argument + self.box_width / 2.0, self.spread.v),
@@ -225,6 +235,8 @@ impl KlinePlotPoint{
                 shapes.push(low_whisker_end);
             }
         }
+
+         * */
     }
 
     pub(super) fn add_rulers_and_text(
